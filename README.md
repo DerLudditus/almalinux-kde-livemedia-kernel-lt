@@ -131,6 +131,8 @@ It might be sheer luck that the 6.1 kernel replaced 5.14, and not the other way 
 
 If this is the quality of open-source code, I don't want to know how the closed-source one looks like...
 
+Note that Anaconda will install both kernels on the final system, with the default kernel being 6.1, but the second and the rescue kernel being 5.14. I'm stunned how so many people are getting mental over the complexity of `systemd`, but there isn't that much of an outrage about the sheer abomination that is GRUB2.
+
 ### 5. Download a prebuilt ISO
 
 I hosted an ISO file on SourceForge, under [almalinux-custom-kde-live](https://sourceforge.net/projects/almalinux-custom-kde-live/) - in [9.3](https://sourceforge.net/projects/almalinux-custom-kde-live/files/9.3/). Use it at your own risk! No warranties, explicit or implied. None whatsoever.
