@@ -62,7 +62,7 @@ sudo livemedia-creator \
 
 ### 3. Changes towards the original scripts from [AlmaLinux/sig-livemedia](https://github.com/AlmaLinux/sig-livemedia)
 
-* The Live media will boot using `kernel-lt` [from ELRepo](http://elrepo.org/tiki/kernel-lt). The installed system will have both `kernel-lt` (6.1) and `kernel` (5.14), so pay attention when updating the system only brings a new `kernel`, which would go first in GRUB, before `kernel-lt`. But you should know that if you ever used several kernel branches simultaneously (Arch, EndeavourOS, Manjaro, anyone?).
+* The Live media will boot using `kernel-lt` [from ELRepo](http://elrepo.org/tiki/kernel-lt). The installed system will have both `kernel-lt` (6.1) and `kernel` (5.14), so pay attention to those situations when updating the system only brings a new `kernel`, which would go first in GRUB, before `kernel-lt`. But you should know that if you ever used several kernel branches simultaneously (Arch, EndeavourOS, Manjaro, anyone?).
 * I'm using `timezone Europe/Berlin` and [ftp.gwdg.de](https://ftp.gwdg.de) for most repos in the `ks` file. You can change them to match your needs. Consult [mirrors.almalinux.org](https://mirrors.almalinux.org) if needed; also, [elrepo.org](http://elrepo.org/tiki/Download).
 * I have used this script to build a KDE Live ISO of AlmaLinux 9.3 before the team could build an official ISO, because I needed it for a new install, and without the requirement of a USB Ethernet adapter + a patch cord for the said laptop, so I couldn't be stopped by the situation that prevented them from offering an official KDE ISO: when EPEL9 has updated KDE to Plasma 5.27.6, KF5 5.108, Apps 23.04.3, `kdepim-addons` couldn't be updated because `kf5itinerary` needed a newer `poplar` than the one available in EL9 ([read about it here](https://lists.fedoraproject.org/archives/list/epel-devel@lists.fedoraproject.org/thread/VAAKEKAEKGSBBPXO4HJK3J7EDVPUUKJM/)). **I'm not using KDE PIM at all, so I just excluded `kdepim-addons`.**
 * Extra repositories have been added and enabled, with the packages shown below preselected:\
@@ -77,16 +77,16 @@ IMVHO, both `livecd-tools` and `livemedia-creator` (`lorax`) suck big time. Thei
 
 The resulting ISO files suffer from the following inconsistency:
 
-* The booting kernel is in **isolinux/vmlinuz** and it cannot be customized. The booting system lacks any `grub2.cfg`, and the only options is to boot this kernel, of to perform a checksum verification, then to boot. It's impossible to use a second kernel. `livecd-tools` will use the `kernel` package, no matter what; `livemedia-creator` can be customized, but far too many templates are used in the process (well, it comes from RH, so why am I so surprised?).
+* The booting kernel is in **isolinux/vmlinuz** and it cannot be customized. The booting system lacks any GRUB configuration file, and the only options are (1) to boot this kernel, or (2) to perform a checksum verification, then to boot. It's impossible to use a second kernel. `livecd-tools` will use the `kernel` package, no matter what; `livemedia-creator` can be customized, but far too many templates are used in the process (well, it comes from RH, right?).
 * Once you have booted into **LiveOS/squashfs.img**, the live system will include whatever has been installed there, in this case both `kernel` and `kernel-lt`, properly listed in `grub2.cfg`, and installable by Anaconda.
 
 Nobody, and by this I mean the designers of such pieces of software, ever thought of any of these options:
 
 * Let the user specify the kernel they want to use for **isolinux/vmlinuz**.
-* F-ing use a proper GRUB configuration and include in for booting all the kernels that are included in the installed live system **LiveOS/squashfs.img**.
+* F-ing use a proper GRUB configuration and make it able to boot all the kernels that are included in the installed live system **LiveOS/squashfs.img**.
 * Alternatively, and regardless of what's in the squash, include all the kernels that have "Provide: kernel", even if that would mean to include all the kernels available in all the enabled repos; in this case, `kernel-ml` would be a 3rd kernel, which would be an interesting way to test a live system without installing anything.
 
-Hardcording shit is shitty.
+Hardcoding shit is shitty.
 
 ### 5. Download a prebuilt ISO
 
