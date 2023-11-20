@@ -56,7 +56,7 @@ sudo livemedia-creator \
     --nomacboot 
 ```
 
-### 3. Changes towards the original scripts from AlmaLinux/sig-livemedia
+### 3. Changes towards the original scripts from [AlmaLinux/sig-livemedia](https://github.com/AlmaLinux/sig-livemedia)
 
 * The Live media will boot using `kernel-lt` [from ELRepo](http://elrepo.org/tiki/kernel-lt). The installed system will have both `kernel-lt` (6.1) and `kernel` (5.14), so pay attention when updating the system only brings a new `kernel`, which would go first in GRUB, before `kernel-lt`. But you should know that if you ever used several kernel branches simultaneously (Arch, EndeavourOS, Manjaro, anyone?).
 * I'm using `timezone Europe/Berlin` and [ftp.gwdg.de](https://ftp.gwdg.de) for most repos in the `ks` file. You can change them to match your needs. Consult [mirrors.almalinux.org](https://mirrors.almalinux.org) if needed; also, [elrepo.org](http://elrepo.org/tiki/Download).
@@ -86,4 +86,4 @@ Hardcording shit is shitty.
 
 ### 5. Download a prebuilt ISO
 
-I hosted an ISO file on SourceForge, under [almalinux-custom-kde-live](https://sourceforge.net/projects/almalinux-custom-kde-live/). Use it at your own risk! No warranties, explicit or implied. None whatsoever.
+I hosted an ISO file on SourceForge, under [almalinux-custom-kde-live](https://sourceforge.net/projects/almalinux-custom-kde-live/) - in [9.3](https://sourceforge.net/projects/almalinux-custom-kde-live/files/9.3/). Use it at your own risk! No warranties, explicit or implied. None whatsoever.
