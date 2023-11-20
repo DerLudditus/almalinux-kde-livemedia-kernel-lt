@@ -127,7 +127,11 @@ hardlink ${KERNELDIR}/initrd.img ${BOOTDIR}
 %endif
 ```
 
-It might be sheer luck that the 6.1 kernel replaced 5.14, and not the other way around! And what's the purpose of `runtime-install.tmpl` then, in which the kernel and its modules are listed by name, so I could specify different names, i.e. with `-lt` inserted? Either way, at least this fortunate thing *is happening* with `livemedia-creator`; when I tried using `livecd-tools` (which is faster, because it caches all the RPMs), the booting kernel was the first one, i.e. 5.14, and there was nothing I could do about it.
+It might be sheer luck that the 6.1 kernel replaced 5.14, and not the other way around! And what's the purpose of `runtime-install.tmpl` then, in which the kernel and its modules are listed by name, so I could specify different names, i.e. with `-lt` inserted? 
+
+***As a matter of fact, every second build I made has the `livemedia.log` kernel lines reversed, so only one build in two boots the 6.1 kernel, and the other half of the builds boot the 5.14 kernel! What is this, true randomness?!***
+
+Either way, at least this fortunate thing *is happening* with `livemedia-creator`; when I tried using `livecd-tools` (which is faster, because it caches all the RPMs), the booting kernel was the first one, i.e. 5.14, and there was nothing I could do about it.
 
 If this is the quality of open-source code, I don't want to know how the closed-source one looks like...
 
