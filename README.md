@@ -67,6 +67,23 @@ sudo livemedia-creator \
   **rpmfusion-free-updates** and **rpmfusion-nonfree-updates**: for the proper, unhindered versions of `ffmpeg`, `gstreamer1-plugins-ugly`, `libavcodec-freeworld`, `lame`, `mplayer`, `smplayer`, `vlc`.
 * Additional software that will be preinstalled: `alsa-sof-firmware` (newer laptops need it, but most distros don't install it), `featherpad` (because it's a small gem), `fortune-mod` (because you should add it to `~/.bashrc`), `mc.`
 
+### What I don't like in these building systems  
+
+IMVHO, both `livecd-tools` and `livemedia-creator` (`lorax`) suck big time. Their creators never thought that some people might want to customize the boot kernel, to include more than one kernel, etc. They "knew better" (à la Microsoft), and this area is the least configurable in these open-source projects!
+
+The resulting ISO files suffer from the following inconsistency:
+
+* The booting kernel is in **isolinux/vmlinuz** and it cannot be customized. The booting system lacks any `grub2.cfg`, and the only options is to boot this kernel, of to perform a checksum verification, then to boot. It's impossible to use a second kernel. `livecd-tools` will use the `kernel` package, no matter what; `livemedia-creator` can be customized, but far too many templates are used in the process (well, it comes from RH, so why am I so surprised?).
+* Once you have booted into **LiveOS/squashfs.img**, the live system will include whatever has been installed there, in this case both `kernel` and `kernel-lt`, properly listed in `grub2.cfg`, and installable by Anaconda.
+
+Nobody, and by this I mean the designers of such pieces of software, ever thought of any of these options:
+
+* Let the user specify the kernel they want to use for **isolinux/vmlinuz**.
+* F-ing use a proper GRUB configuration and include in for booting all the kernels that are included in the installed live system **LiveOS/squashfs.img**.
+* Alternatively, and regardless of what's in the squash, include all the kernels that have "Provide: kernel", even if that would mean to include all the kernels available in all the enabled repos; in this case, `kernel-ml` would be a 3rd kernel, which would be an interesting way to test a live system without installing anything.
+
+Hardcording shit is shitty.
+
 ### Download a prebuilt ISO
 
 I hosted an ISO file on SourceForge, under [almalinux-custom-kde-live](https://sourceforge.net/projects/almalinux-custom-kde-live/). Use it at your own risk! No warranties, explicit or implied. None whatsoever.
