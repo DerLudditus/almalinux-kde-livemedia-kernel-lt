@@ -2,6 +2,8 @@
 
 This git repository contains the scripts needed to produce a customized AlmaLinux KDE Live ISO. A fully-functioning `AlmaLinux` system is required, being it metal or virtual.
 
+THIS UNOFFICIAL PROJECT IS **NOT** ENDORSED BY the AlmaLinux OS Foundation. IT IS A DERIVATIVE WORK USING MODIFIED SCRIPTS ORIGINALLY AND OFFICIALLY PUBLISHED ON [AlmaLinux/sig-livemedia](https://github.com/AlmaLinux/sig-livemedia).
+
 ## 1. How to build it
 
 This project contains the `KickStart` file required to build KDE live media for AlmaLinux 9.3, and modified templates that are required in order to use `kernel-lt` from ELRepo, which is 6.1, better supporting more recent hardware than the official 5.14 one. **I specifically needed a newer kernel for an Acer laptop that uses MT7663 for Wi-Fi and BT.**
