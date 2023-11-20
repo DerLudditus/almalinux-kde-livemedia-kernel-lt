@@ -41,7 +41,7 @@ Not knowing which of them is used, I changed them both:
 
 `/usr/share/lorax/templates.d/99-generic/runtime-install.tmpl`
 
-It's counterintuitive, but these are the scripts that needed to be edited in order to change the kernel used by the LiveISO **to boot**; once in the live session, you can have as many kernels as there are added as packages, they show up in GRUB, and they will all (i.e. both) installed (if you'll want to install the OS), but the kernel used to boot this ISO is just one. See more in section 4.
+It's counterintuitive, but these are the scripts that needed to be edited in order to change the kernel used by the LiveISO **to boot**; once in the live session, you can have as many kernels as there are added as packages, they show up in GRUB, and they will all (i.e. both) installed (if you'll want to install the OS), but the kernel used to boot this ISO is just one. See more in section 4, **because I might as well be wrong**.
 
 So, **before doing anything else, make sure you override** those files in your building system with the ones provided here!
 
@@ -77,7 +77,7 @@ IMVHO, both `livecd-tools` and `livemedia-creator` (`lorax`) suck big time. Thei
 
 The resulting ISO files suffer from the following inconsistency:
 
-* The booting kernel is in **isolinux/vmlinuz** and it cannot be customized. The booting system lacks any GRUB configuration file, and the only options are (1) to boot this kernel, or (2) to perform a checksum verification, then to boot. It's impossible to use a second kernel. `livecd-tools` will use the `kernel` package, no matter what; `livemedia-creator` can be customized, but far too many templates are used in the process (well, it comes from RH, right?).
+* The booting kernel is in **isolinux/vmlinuz** and it cannot be customized. The only options are (1) 'Start AlmaLinux Live 9.3' and (2) 'Test this media & start AlmaLinux Live 9.3'. It's impossible to use a second kernel. `livecd-tools` will use the `kernel` package, no matter what; `livemedia-creator` can be customized, but far too many templates are used in the process (well, it comes from RH, right?).
 * Once you have booted into **LiveOS/squashfs.img**, the live system will include whatever has been installed there, in this case both `kernel` and `kernel-lt`, properly listed in `grub2.cfg`, and installable by Anaconda.
 
 Nobody, and by this I mean the designers of such pieces of software, ever thought of any of these options:
@@ -87,6 +87,47 @@ Nobody, and by this I mean the designers of such pieces of software, ever though
 * Alternatively, and regardless of what's in the squash, include all the kernels that have "Provide: kernel", even if that would mean to include all the kernels available in all the enabled repos; in this case, `kernel-ml` would be a 3rd kernel, which would be an interesting way to test a live system without installing anything.
 
 Hardcoding shit is shitty.
+
+**Now, about how I might be wrong.** It might be out of sheer luck that I got the `kernel-lt` booting! `livemedia.log` includes this:
+
+```INFO pylorax.ltmpl: running x86.tmpl
+...
+DEBUG pylorax.ltmpl: template line 4: mkdir isolinux
+...
+DEBUG pylorax.ltmpl: template line 19: mkdir images/pxeboot
+DEBUG pylorax.ltmpl: template line 20: installkernel images-x86_64 boot/vmlinuz-5.14.0-362.8.1.el9_3.x86_64 images/pxeboot/vmlinuz
+DEBUG pylorax.ltmpl: template line 21: installinitrd images-x86_64 boot/initramfs-5.14.0-362.8.1.el9_3.x86_64.img images/pxeboot/initrd.img
+DEBUG pylorax.ltmpl: template line 22: installkernel images-x86_64 boot/vmlinuz-6.1.62-1.el9.elrepo.x86_64 images/pxeboot/vmlinuz
+DEBUG pylorax.ltmpl: template line 23: installinitrd images-x86_64 boot/initramfs-6.1.62-1.el9.elrepo.x86_64.img images/pxeboot/initrd.img
+DEBUG pylorax.ltmpl: template line 24: hardlink images/pxeboot/vmlinuz isolinux
+DEBUG pylorax.ltmpl: template line 25: hardlink images/pxeboot/initrd.img isolinux
+```
+The template lines are counted by an unknown logic. All four `x86.tmpl` files (because they're four, and the log doesn't specify which one was used!) have the lines labeled 20-ish into the 50-ish range, and they just install all the found kernels, **with the last one overriding the previous!**
+
+```
+## install kernels
+mkdir ${KERNELDIR}
+%for kernel in kernels:
+    %if kernel.flavor:
+        ## i386 PAE
+        installkernel images-xen ${kernel.path} ${KERNELDIR}/vmlinuz-${kernel.flavor}
+        installinitrd images-xen ${kernel.initrd.path} ${KERNELDIR}/initrd-${kernel.flavor}.img
+    %else:
+        ## normal i386, x86_64
+        installkernel images-${basearch} ${kernel.path} ${KERNELDIR}/vmlinuz
+        installinitrd images-${basearch} ${kernel.initrd.path} ${KERNELDIR}/initrd.img
+    %endif
+%endfor
+
+hardlink ${KERNELDIR}/vmlinuz ${BOOTDIR}
+hardlink ${KERNELDIR}/initrd.img ${BOOTDIR}
+%if basearch == 'x86_64':
+    treeinfo images-xen kernel ${KERNELDIR}/vmlinuz
+    treeinfo images-xen initrd ${KERNELDIR}/initrd.img
+%endif
+```
+
+It might be sheer luck that the 6.1 kernel replaced 5.14, and not the other way around! But if this is the quality of open-source code, I don't want to know how the closed-source one looks like...
 
 ### 5. Download a prebuilt ISO
 
