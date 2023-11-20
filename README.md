@@ -2,7 +2,7 @@
 
 This git repository contains the scripts needed to produce a customized AlmaLinux KDE Live ISO. A fully-functioning `AlmaLinux` system is required, being it metal or virtual.
 
-## How to build it
+## 1. How to build it
 
 This project contains the `KickStart` file required to build KDE live media for AlmaLinux 9.3, and modified templates that are required in order to use `kernel-lt` from ELRepo, which is 6.1, better supporting more recent hardware than the official 5.14 one. **I specifically needed a newer kernel for an Acer laptop that uses MT7663 for Wi-Fi and BT.**
 
@@ -29,7 +29,7 @@ sudo dnf -y --enablerepo="epel" install anaconda-tui \
                 shim-*64
 ```
 
-### Building using `lorax`
+### 2. Building using `lorax`
 
 To use `kernel-lt` and (its modules) instead of `kernel` (and its modules), `lorax` needs to use modified templates. The orthodox way is to use a separate set of templates, and tell it to use that folder hierarchy. I found this annoyingly stupid, as `/usr/share/lorax/templates.d/` contains 132 files, of which one or two require changes. So I just edited them in place.
 
@@ -56,7 +56,7 @@ sudo livemedia-creator \
     --nomacboot 
 ```
 
-### Changes towards the original scripts from AlmaLinux/sig-livemedia
+### 3. Changes towards the original scripts from AlmaLinux/sig-livemedia
 
 * The Live media will boot using `kernel-lt` [from ELRepo](http://elrepo.org/tiki/kernel-lt). The installed system will have both `kernel-lt` (6.1) and `kernel` (5.14), so pay attention when updating the system only brings a new `kernel`, which would go first in GRUB, before `kernel-lt`. But you should know that if you ever used several kernel branches simultaneously (Arch, EndeavourOS, Manjaro, anyone?).
 * I'm using `timezone Europe/Berlin` and [ftp.gwdg.de](https://ftp.gwdg.de) for most repos in the `ks` file. You can change them to match your needs. Consult [mirrors.almalinux.org](https://mirrors.almalinux.org) if needed; also, [elrepo.org](http://elrepo.org/tiki/Download).
@@ -67,7 +67,7 @@ sudo livemedia-creator \
   **rpmfusion-free-updates** and **rpmfusion-nonfree-updates**: for the proper, unhindered versions of `ffmpeg`, `gstreamer1-plugins-ugly`, `libavcodec-freeworld`, `lame`, `mplayer`, `smplayer`, `vlc`.
 * Additional software that will be preinstalled: `alsa-sof-firmware` (newer laptops need it, but most distros don't install it), `featherpad` (because it's a small gem), `fortune-mod` (because you should add it to `~/.bashrc`), `mc.`
 
-### What I don't like in these building systems  
+### 4. What I don't like in these building systems  
 
 IMVHO, both `livecd-tools` and `livemedia-creator` (`lorax`) suck big time. Their creators never thought that some people might want to customize the boot kernel, to include more than one kernel, etc. They "knew better" (à la Microsoft), and this area is the least configurable in these open-source projects!
 
@@ -84,6 +84,6 @@ Nobody, and by this I mean the designers of such pieces of software, ever though
 
 Hardcording shit is shitty.
 
-### Download a prebuilt ISO
+### 5. Download a prebuilt ISO
 
 I hosted an ISO file on SourceForge, under [almalinux-custom-kde-live](https://sourceforge.net/projects/almalinux-custom-kde-live/). Use it at your own risk! No warranties, explicit or implied. None whatsoever.
