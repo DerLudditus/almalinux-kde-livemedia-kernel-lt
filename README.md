@@ -41,9 +41,11 @@ Not knowing which of them is used, I changed them both:
 
 `/usr/share/lorax/templates.d/99-generic/runtime-install.tmpl`
 
-So, **before doing anything else, make sure you override** those files in your building system with the ones provided here.
+It's counterintuitive, but these are the scripts that needed to be edited in order to change the kernel used by the LiveISO **to boot**; once in the live session, you can have as many kernels as there are added as packages, they show up in GRUB, and they will all (i.e. both) installed (if you'll want to install the OS), but the kernel used to boot this ISO is just one. See more in section 4.
 
-Then, run this to build the KDE ISO:
+So, **before doing anything else, make sure you override** those files in your building system with the ones provided here!
+
+Then, and only then, run this to build the KDE ISO:
 
 ```sh
 sudo livemedia-creator \
