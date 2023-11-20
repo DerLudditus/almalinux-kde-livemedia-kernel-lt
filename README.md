@@ -127,7 +127,9 @@ hardlink ${KERNELDIR}/initrd.img ${BOOTDIR}
 %endif
 ```
 
-It might be sheer luck that the 6.1 kernel replaced 5.14, and not the other way around! But if this is the quality of open-source code, I don't want to know how the closed-source one looks like...
+It might be sheer luck that the 6.1 kernel replaced 5.14, and not the other way around! And what's the purpose of `runtime-install.tmpl` then, in which the kernel and its modules are listed by name, so I could specify different names, i.e. with `-lt` inserted?
+
+If this is the quality of open-source code, I don't want to know how the closed-source one looks like...
 
 ### 5. Download a prebuilt ISO
 
