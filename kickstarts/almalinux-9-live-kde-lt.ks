@@ -23,8 +23,8 @@ repo --name="crb" --baseurl=https://ftp.gwdg.de/pub/linux/almalinux/9/CRB/$basea
 repo --name="epel" --baseurl=https://dl.fedoraproject.org/pub/epel/9/Everything/$basearch/
 repo --name="epel-testing" --baseurl=https://dl.fedoraproject.org/pub/epel/testing/9/Everything/$basearch/
 repo --name="almalinux-synergy" --baseurl=https://ftp.gwdg.de/pub/linux/almalinux/9/synergy/$basearch/os/
-repo --name="elrepo" --baseurl=http://elrepo.org/linux/elrepo/el9/$basearch/
-repo --name="elrepo-kernel" --baseurl=http://elrepo.org/linux/kernel/el9/$basearch/
+repo --name="elrepo" --baseurl=https://ftp.gwdg.de/pub/linux/elrepo/elrepo/el9/x86_64/
+repo --name="elrepo-kernel" --baseurl=https://ftp.gwdg.de/pub/linux/elrepo/kernel/el9/x86_64/
 repo --name="rpmfusion-free-updates" --baseurl=http://download1.rpmfusion.org/free/el/updates/9/$basearch/
 repo --name="rpmfusion-nonfree-updates" --baseurl=http://download1.rpmfusion.org/nonfree/el/updates/9/$basearch/
 
