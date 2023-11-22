@@ -139,7 +139,7 @@ Either way, at least this fortunate thing *is possible* with `livemedia-creator`
 
 If this is the quality of open-source code, I don't want to know how the closed-source one looks like...
 
-Note that Anaconda will install both kernels on the final system, with the default kernel being 6.1, but the second and the rescue kernel being 5.14. (As a side note, I'm stunned how so many people are getting mental over the complexity of `systemd`, but there isn't that much of an outrage about the sheer abomination that is GRUB2. Not only it's absurdly complex, but even the paths are changing back and forth, as I could notice in FC36, to which I submitted (a bug for `grub-customizer`)[https://bugzilla.redhat.com/show_bug.cgi?id=2174582] with its solution; now `grub-customizer` works again in Fedora, but it doesn't work in EPEL9!)
+**Note that Anaconda will install both kernels on the final system, with the default kernel being 6.1, but the second and the rescue kernel being 5.14.** (As a side note, I'm stunned how so many people are getting mental over the complexity of `systemd`, but there isn't that much of an outrage about the sheer abomination that is GRUB2. Not only it's absurdly complex, but even the paths are changing back and forth, as I could notice in FC36, to which I submitted [a bug for `grub-customizer`](https://bugzilla.redhat.com/show_bug.cgi?id=2174582) with its solution; now `grub-customizer` works again in Fedora, but it doesn't work in EPEL9!)
 
 ### 5. Download a prebuilt ISO
 
