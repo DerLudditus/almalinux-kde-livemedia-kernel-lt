@@ -1,0 +1,13 @@
+--- treebuilder.old	2023-11-22 06:00:50.357657547 +0100
++++ treebuilder.new	2023-11-22 01:38:22.791237310 +0100
+@@ -398,7 +398,9 @@
+         if match:
+             kernel = DataHolder(path=joinpaths(kdir, f))
+             kernel.update(match.groupdict()) # sets version, arch, flavor
+-            kernels.append(kernel)
++            #  Only allow kernel-lt or kernel-ml from ELRepo in the case of EL9
++            if kernel.version >= "6.1":
++            	kernels.append(kernel)
+ 
+     # look for associated initrd/initramfs/etc.
+     for kernel in kernels:
