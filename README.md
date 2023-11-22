@@ -95,7 +95,8 @@ Hardcoding shit is shitty.
 
 The barbaric way I needed to patch `/usr/lib/python3.9/site-packages/pylorax/treebuilder.py` was the simplest way to avoid this _idiocy by design_ that will become obvious once you read this log excerpt:
 
-```INFO pylorax.ltmpl: running x86.tmpl
+```sh
+INFO pylorax.ltmpl: running x86.tmpl
 ...
 DEBUG pylorax.ltmpl: template line 4: mkdir isolinux
 ...
@@ -109,7 +110,7 @@ DEBUG pylorax.ltmpl: template line 25: hardlink images/pxeboot/initrd.img isolin
 ```
 The template lines are counted by an unknown logic. All four `x86.tmpl` files (because they're four, and the log doesn't specify which one was used!) have the lines labeled 20-ish into the 50-ish range, and they just install all the found kernels, **with the last one overriding the previous kernel!**
 
-```
+```sh
 ## install kernels
 mkdir ${KERNELDIR}
 %for kernel in kernels:
