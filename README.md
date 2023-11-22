@@ -33,17 +33,21 @@ sudo dnf -y --enablerepo="epel" install anaconda-tui \
 
 ### 2. Building using `lorax`
 
-To use `kernel-lt` and (its modules) instead of `kernel` (and its modules), `lorax` needs to use modified templates. The orthodox way is to use a separate set of templates, and tell it to use that folder hierarchy. I found this annoyingly stupid, as `/usr/share/lorax/templates.d/` contains 132 files, of which one or two require changes. So I just edited them in place.
+To use `kernel-lt` and (its modules) instead of `kernel` (and its modules), `lorax` needs to use a modified script. It's quite unorthodox to modify a file that would be overriden by the next update of the `lorax` package, but I found it much easier this way.
 
-Not knowing which of them is used, I changed them both:
+So, **before anything else**, use the provided patch this way:
 
-`/usr/share/lorax/templates.d/80-rhel/runtime-install.tmpl`
+```sudo patch /usr/lib/python3.9/site-packages/pylorax/treebuilder.py -p0 < treebuilder.patch
+```
 
-`/usr/share/lorax/templates.d/99-generic/runtime-install.tmpl`
+This is a brute way of telling `lorax` to ignore any kernels with versions lower than 6.1 (the normal EL9 kernel is 5.14) for the kernels used by the LiveISO **to boot**; once in the live session, you can have as many kernels as there are added as packages, they show up in GRUB, and they will all (i.e. both) installed (if you'll want to install the OS), but the kernel used to boot this ISO is just one. 
 
-It's counterintuitive, but these are the scripts that needed to be edited in order to change the kernel used by the LiveISO **to boot**; once in the live session, you can have as many kernels as there are added as packages, they show up in GRUB, and they will all (i.e. both) installed (if you'll want to install the OS), but the kernel used to boot this ISO is just one. See more in section 4, **because I might as well be wrong**.
+``` #  Only allow kernel-lt or kernel-ml from ELRepo in the case of EL9
+            if kernel.version >= "6.1":
+            	kernels.append(kernel)
+```
 
-So, **before doing anything else, make sure you override** those files in your building system with the ones provided here!
+See more in section 4.
 
 Then, and only then, run this to build the KDE ISO:
 
@@ -65,11 +69,10 @@ sudo livemedia-creator \
 * The Live media will boot using `kernel-lt` [from ELRepo](http://elrepo.org/tiki/kernel-lt). The installed system will have both `kernel-lt` (6.1) and `kernel` (5.14), so pay attention to those situations when updating the system only brings a new `kernel`, which would go first in GRUB, before `kernel-lt`. But you should know that if you ever used several kernel branches simultaneously (Arch, EndeavourOS, Manjaro, anyone?).
 * I'm using `timezone Europe/Berlin` and [ftp.gwdg.de](https://ftp.gwdg.de) for most repos in the `ks` file. You can change them to match your needs. Consult [mirrors.almalinux.org](https://mirrors.almalinux.org) if needed; also, [elrepo.org](http://elrepo.org/tiki/Download).
 * I have used this script to build a KDE Live ISO of AlmaLinux 9.3 before the team could build an official ISO, because I needed it for a new install, and without the requirement of a USB Ethernet adapter + a patch cord for the said laptop, so I couldn't be stopped by the situation that prevented them from offering an official KDE ISO: when EPEL9 has updated KDE to Plasma 5.27.6, KF5 5.108, Apps 23.04.3, `kdepim-addons` couldn't be updated because `kf5itinerary` needed a newer `poplar` than the one available in EL9 ([read about it here](https://lists.fedoraproject.org/archives/list/epel-devel@lists.fedoraproject.org/thread/VAAKEKAEKGSBBPXO4HJK3J7EDVPUUKJM/)). **I'm not using KDE PIM at all, so I just excluded `kdepim-addons`.**
-* Extra repositories have been added and enabled, with the packages shown below preselected:\
-  **epel-testing**: for `krename` (I installed it while it was still in testing; now it got properly released, but I found _epel-testing_ to be solid enough, yet slow to release, hence I keep it enabled!)\
-  **almalinux-synergy:** for `dnfdragora` (yay!)\
+* Extra repositories have been added and enabled, with the packages shown below preselected:
+  **almalinux-synergy:** for `dnfdragora` (yay!)
   **rpmfusion-free-updates** and **rpmfusion-nonfree-updates**: for the proper, unhindered versions of `ffmpeg`, `gstreamer1-plugins-ugly`, `libavcodec-freeworld`, `lame`, `mplayer`, `smplayer`, `vlc`.
-* Additional software that will be preinstalled: `alsa-sof-firmware` (newer laptops need it, but most distros don't install it), `featherpad` (because it's a small gem), `fortune-mod` (because you should add it to `~/.bashrc`), `mc.`
+* Additional software that will be preinstalled: `alsa-sof-firmware` (newer laptops need it, but most distros don't install it), `featherpad` (because it's a small gem), `fortune-mod` (because you should add it to `~/.bashrc`), `krename`, `mc.`
 
 ### 4. What I don't like in these building systems  
 
@@ -88,7 +91,7 @@ Nobody, and by this I mean the designers of such pieces of software, ever though
 
 Hardcoding shit is shitty.
 
-**Now, about how I might be wrong.** It might be out of sheer luck that I got the `kernel-lt` booting! `livemedia.log` includes this:
+The barbaric way I needed to patch `/usr/lib/python3.9/site-packages/pylorax/treebuilder.py` was the simplest way to avoid this _idiocy by design_ that will become obvious once you read this log excerpt:
 
 ```INFO pylorax.ltmpl: running x86.tmpl
 ...
@@ -102,7 +105,7 @@ DEBUG pylorax.ltmpl: template line 23: installinitrd images-x86_64 boot/initramf
 DEBUG pylorax.ltmpl: template line 24: hardlink images/pxeboot/vmlinuz isolinux
 DEBUG pylorax.ltmpl: template line 25: hardlink images/pxeboot/initrd.img isolinux
 ```
-The template lines are counted by an unknown logic. All four `x86.tmpl` files (because they're four, and the log doesn't specify which one was used!) have the lines labeled 20-ish into the 50-ish range, and they just install all the found kernels, **with the last one overriding the previous!**
+The template lines are counted by an unknown logic. All four `x86.tmpl` files (because they're four, and the log doesn't specify which one was used!) have the lines labeled 20-ish into the 50-ish range, and they just install all the found kernels, **with the last one overriding the previous kernel!**
 
 ```
 ## install kernels
@@ -127,15 +130,13 @@ hardlink ${KERNELDIR}/initrd.img ${BOOTDIR}
 %endif
 ```
 
-It might be sheer luck that the 6.1 kernel replaced 5.14, and not the other way around! And what's the purpose of `runtime-install.tmpl` then, in which the kernel and its modules are listed by name, so I could specify different names, i.e. with `-lt` inserted? 
+It's sheer luck that the 6.1 kernel replaced 5.14 _this time_, and not the other way around! As a matter of fact, _every second build_ I made has the `livemedia.log` kernel lines reversed, so only one build in two boots the 6.1 kernel, and the other half of the builds boot the 5.14 kernel! **This is why I needed to patch `treebuilder.py`, so only the `kernel-lt` kernel would be considered!**
 
-***As a matter of fact, every second build I made has the `livemedia.log` kernel lines reversed, so only one build in two boots the 6.1 kernel, and the other half of the builds boot the 5.14 kernel! What is this, true randomness?!***
-
-Either way, at least this fortunate thing *is happening* with `livemedia-creator`; when I tried using `livecd-tools` (which is faster, because it caches all the RPMs), the booting kernel was the first one, i.e. 5.14, and there was nothing I could do about it.
+Either way, at least this fortunate thing *is possible* with `livemedia-creator`; when I tried using `livecd-tools` (which is faster, because it caches all the RPMs), the booting kernel was the first one, i.e. 5.14, and there was nothing I could do about it.
 
 If this is the quality of open-source code, I don't want to know how the closed-source one looks like...
 
-Note that Anaconda will install both kernels on the final system, with the default kernel being 6.1, but the second and the rescue kernel being 5.14. I'm stunned how so many people are getting mental over the complexity of `systemd`, but there isn't that much of an outrage about the sheer abomination that is GRUB2.
+Note that Anaconda will install both kernels on the final system, with the default kernel being 6.1, but the second and the rescue kernel being 5.14. (As a side note, I'm stunned how so many people are getting mental over the complexity of `systemd`, but there isn't that much of an outrage about the sheer abomination that is GRUB2. Not only it's absurdly complex, but even the paths are changing back and forth, as I could notice in FC36, to which I submitted (a bug for `grub-customizer`)[https://bugzilla.redhat.com/show_bug.cgi?id=2174582] with its solution; now `grub-customizer` works again in Fedora, but it doesn't work in EPEL9!)
 
 ### 5. Download a prebuilt ISO
 
