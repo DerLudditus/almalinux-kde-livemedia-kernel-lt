@@ -1,4 +1,4 @@
-#version=DEVEL
+# UNOFFICIAL!
 # X Window System configuration information
 xconfig  --startxonboot
 # Keyboard layouts
@@ -23,8 +23,8 @@ repo --name="crb" --baseurl=https://ftp.gwdg.de/pub/linux/almalinux/9/CRB/$basea
 repo --name="epel" --baseurl=https://dl.fedoraproject.org/pub/epel/9/Everything/$basearch/
 repo --name="epel-testing" --baseurl=https://dl.fedoraproject.org/pub/epel/testing/9/Everything/$basearch/
 repo --name="almalinux-synergy" --baseurl=https://ftp.gwdg.de/pub/linux/almalinux/9/synergy/$basearch/os/
-repo --name="elrepo" --baseurl=https://ftp.gwdg.de/pub/linux/elrepo/elrepo/el9/x86_64/
-repo --name="elrepo-kernel" --baseurl=https://ftp.gwdg.de/pub/linux/elrepo/kernel/el9/x86_64/
+repo --name="elrepo" --install --baseurl=https://ftp.gwdg.de/pub/linux/elrepo/elrepo/el9/$basearch/
+repo --name="elrepo-kernel" --install --baseurl=https://ftp.gwdg.de/pub/linux/elrepo/kernel/el9/$basearch/
 repo --name="rpmfusion-free-updates" --baseurl=http://download1.rpmfusion.org/free/el/updates/9/$basearch/
 repo --name="rpmfusion-nonfree-updates" --baseurl=http://download1.rpmfusion.org/nonfree/el/updates/9/$basearch/
 
@@ -313,48 +313,6 @@ echo 'File created by kickstart. See systemd-update-done.service(8).' \
 # See bug 1317709
 rm -f /boot/*-rescue*
 
-# TODO: almalinux-backgrounds-extras package looks good, remove inline method
-# on next build
-generateKDEWallpapers() {
-  # Declare an array for background types
-  declare -a bgtypes=("dark" "light" "abstract-dark" "abstract-light" "mountains-dark" "mountains-white" "waves-dark" "waves-light" "waves-sunset")
-  # Declare an array for background sizes
-  declare -a sizes=("1800x1440.jpg" "2048x1536.jpg" "2560x1080.jpg" "2560x1440.jpg" "2560x1600.jpg" "3440x1440.jpg")
-  ## Loop through the above array(s) types and sizes to create links and metadata
-  for bg in "${bgtypes[@]}"
-  do
-    echo "Processing 'Alma-"$bg"' background"
-    # Remove any old folders and create new structure
-    rm -rf /usr/share/wallpapers/Alma-$bg*
-    mkdir -p /usr/share/wallpapers/Alma-$bg/contents/images/
-    # creae sym link for all sizes
-    for size in "${sizes[@]}"
-    do
-    ln -s /usr/share/backgrounds/Alma-$bg-$size /usr/share/wallpapers/Alma-$bg/contents/images/$size
-    done
-    # Create metadata file to make Desktop Wallpaper application happy
-    # Move this to pre-created files in repo to give support to other languages
-    # This is quick hack for time being.
-    cat > /usr/share/wallpapers/Alma-$bg/metadata.desktop <<FOE
-[Desktop Entry]
-Name=AlmaLinux $bg
-
-X-KDE-PluginInfo-Author=Bala Raman
-X-KDE-PluginInfo-Email=srbala@gmail.com
-X-KDE-PluginInfo-Name=Alma-$bg
-X-KDE-PluginInfo-Version=0.1.0
-X-KDE-PluginInfo-Website=https://almalinux.org
-X-KDE-PluginInfo-Category=
-X-KDE-PluginInfo-Depends=
-X-KDE-PluginInfo-License=CC-BY-SA
-X-KDE-PluginInfo-EnabledByDefault=true
-X-Plasma-API=5.0
-
-FOE
-  done
-}
-# call function to create wallpapers
-# generateKDEWallpapers
 # Very ODD fix to get Alma background, find alternative
 rm -rf /usr/share/wallpapers/Fedora
 ln -s Alma-mountains-white /usr/share/wallpapers/Fedora
@@ -683,6 +641,7 @@ elfutils-libelf
 elfutils-libs
 emacs-filesystem
 enchant2
+elrepo-release
 epel-release
 espeak-ng
 ethtool
@@ -1528,6 +1487,7 @@ ncurses-base
 ncurses-libs
 ndctl
 ndctl-libs
+neofetch
 neon
 nettle
 newt
