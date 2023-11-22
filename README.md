@@ -37,12 +37,14 @@ To use `kernel-lt` and (its modules) instead of `kernel` (and its modules), `lor
 
 So, **before anything else**, use the provided patch this way:
 
-```sudo patch /usr/lib/python3.9/site-packages/pylorax/treebuilder.py -p0 \< treebuilder.patch
+```sh
+sudo patch /usr/lib/python3.9/site-packages/pylorax/treebuilder.py -p0 \< treebuilder.patch
 ```
 
 This is a brute way of telling `lorax` to ignore any kernels with versions lower than 6.1 (the normal EL9 kernel is 5.14) for the kernels used by the LiveISO **to boot**; once in the live session, you can have as many kernels as there are added as packages, they show up in GRUB, and they will all (i.e. both) installed (if you'll want to install the OS), but the kernel used to boot this ISO is just one. 
 
-``` \#  Only allow kernel-lt or kernel-ml from ELRepo in the case of EL9
+```sh
+ \#  Only allow kernel-lt or kernel-ml from ELRepo in the case of EL9
             if kernel.version >= "6.1":
             	kernels.append(kernel)
 ```
