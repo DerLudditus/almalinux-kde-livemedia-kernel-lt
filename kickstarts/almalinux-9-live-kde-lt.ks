@@ -21,7 +21,7 @@ repo --name="appstream" --baseurl=https://ftp.gwdg.de/pub/linux/almalinux/9/AppS
 repo --name="extras" --baseurl=https://ftp.gwdg.de/pub/linux/almalinux/9/extras/$basearch/os/
 repo --name="crb" --baseurl=https://ftp.gwdg.de/pub/linux/almalinux/9/CRB/$basearch/os/
 repo --name="epel" --baseurl=https://dl.fedoraproject.org/pub/epel/9/Everything/$basearch/
-repo --name="epel-testing" --baseurl=https://dl.fedoraproject.org/pub/epel/testing/9/Everything/$basearch/
+#repo --name="epel-testing" --baseurl=https://dl.fedoraproject.org/pub/epel/testing/9/Everything/$basearch/
 repo --name="almalinux-synergy" --baseurl=https://ftp.gwdg.de/pub/linux/almalinux/9/synergy/$basearch/os/
 repo --name="elrepo" --install --baseurl=https://ftp.gwdg.de/pub/linux/elrepo/elrepo/el9/$basearch/
 repo --name="elrepo-kernel" --install --baseurl=https://ftp.gwdg.de/pub/linux/elrepo/kernel/el9/$basearch/
