@@ -74,7 +74,7 @@ sudo livemedia-creator \
 * Extra repositories have been added and enabled, with the packages shown below preselected:
   **almalinux-synergy:** for `dnfdragora` (yay!)
   **rpmfusion-free-updates** and **rpmfusion-nonfree-updates**: for the proper, unhindered versions of `ffmpeg`, `gstreamer1-plugins-ugly`, `libavcodec-freeworld`, `lame`, `mplayer`, `smplayer`, `vlc`.
-* Additional software that will be preinstalled: `alsa-sof-firmware` (newer laptops need it, but most distros don't install it), `featherpad` (because it's a small gem), `fortune-mod` (because you should add it to `~/.bashrc`), `krename`, `mc.`
+* Additional software that will be preinstalled: `alsa-sof-firmware` (newer laptops need it, but most distros don't install it), `featherpad` (because it's a small gem), `fortune-mod` (because you should add it to `~/.bashrc`), `krename`, `mc`, `warpinator`.
 
 ### 4. What I don't like in these building systems  
 
