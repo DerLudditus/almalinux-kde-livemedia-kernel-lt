@@ -285,9 +285,12 @@ EOF
 rm -f /var/lib/rpm/__db*
 releasever=$(rpm -q --qf '%{version}\n' --whatprovides system-release)
 basearch=$(uname -i)
-# rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 # import AlmaLinux PGP key
-rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-AlmaLinux
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-AlmaLinux-9
+# import EPEL PGP key
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-9
+# import ELRepo PGP key
+rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
 echo "Packages within this LiveCD"
 rpm --rebuilddb
 rpm -qa
@@ -496,6 +499,7 @@ almalinux-gpg-keys
 almalinux-indexhtml
 almalinux-logos
 almalinux-release
+almalinux-release-synergy
 almalinux-repos
 alsa-lib
 alsa-sof-firmware
@@ -1912,6 +1916,7 @@ vlc
 volume_key-libs
 vpnc-script
 vulkan-loader
+warpinator
 wavpack
 wayland-utils
 webkit2gtk3
